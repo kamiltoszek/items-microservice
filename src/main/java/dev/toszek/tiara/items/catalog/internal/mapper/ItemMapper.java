@@ -1,10 +1,11 @@
 package dev.toszek.tiara.items.catalog.internal.mapper;
 
-import dev.toszek.tiara.items.catalog.command.CreateItemCommand;
+import dev.toszek.tiara.items.catalog.command.SaveItemCommand;
 import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import dev.toszek.tiara.items.catalog.internal.entity.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.UUID;
@@ -15,5 +16,10 @@ public interface ItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
-    Item fromCreateCommand(CreateItemCommand createItemCommand, UUID uuid);
+    Item fromCreateCommand(SaveItemCommand saveItemCommand, UUID uuid);
+
+    @Mapping(target = "version", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    void updateItem(SaveItemCommand updatedItem, @MappingTarget Item item);
 }

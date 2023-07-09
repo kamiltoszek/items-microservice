@@ -1,6 +1,6 @@
 package dev.toszek.tiara.items.catalog;
 
-import dev.toszek.tiara.items.catalog.command.CreateItemCommand;
+import dev.toszek.tiara.items.catalog.command.SaveItemCommand;
 import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,5 +13,9 @@ public interface ItemCatalogApi {
 
     Page<ItemDto> findAllPageable(Pageable pageable);
 
-    ItemDto createItem(CreateItemCommand createItemCommand);
+    ItemDto createItem(SaveItemCommand saveItemCommand);
+
+    void deleteItem(UUID itemUuid);
+
+    ItemDto updateItem(UUID itemUuid, SaveItemCommand updatedItem);
 }
