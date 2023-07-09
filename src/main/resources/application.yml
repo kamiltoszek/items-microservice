@@ -27,6 +27,12 @@ spring:
     caffeine:
       spec: maximumSize=100,expireAfterWrite=10m
 
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+
 server:
   port: 8080
 

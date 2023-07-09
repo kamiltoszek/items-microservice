@@ -5,6 +5,11 @@ import dev.toszek.tiara.items.catalog.command.CreateItemsCommand;
 import dev.toszek.tiara.items.catalog.command.ItemFetchFilter;
 import dev.toszek.tiara.items.catalog.command.SaveItemCommand;
 import dev.toszek.tiara.items.catalog.dto.ItemDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -33,10 +38,20 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/items")
 @RequiredArgsConstructor
+@SecurityScheme(
+        name = "X-Api-Key",
+        type = SecuritySchemeType.APIKEY,
+        in = SecuritySchemeIn.HEADER,
+        paramName = "X-Api-Key"
+)
 class ItemsController {
     private final ItemCatalogApi itemCatalogApi;
 
     @PostMapping
+    @Operation(
+            summary = "Creates item in item database",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<ItemDto> createItem(@RequestBody @Valid SaveItemCommand saveItemCommand) {
         ItemDto createdItem = itemCatalogApi.createItem(saveItemCommand);
         return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
@@ -44,6 +59,10 @@ class ItemsController {
 
     @PostMapping("/bulk")
     @Transactional // wrapping bulk item creation in one transaction
+    @Operation(
+            summary = "Creates items in item database, max items allowed at once = 50",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<List<ItemDto>> createItems(@RequestBody @Valid CreateItemsCommand createItemsCommand) {
         List<ItemDto> savedItems = new ArrayList<>();
         createItemsCommand.items().forEach(createItemCommand -> savedItems.add(itemCatalogApi.createItem(createItemCommand)));
@@ -52,6 +71,10 @@ class ItemsController {
 
     @Cacheable("items") // Cache the result of getItemById
     @GetMapping("/{itemUuid}")
+    @Operation(
+            summary = "Return item by uuid",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<ItemDto> getItemById(@PathVariable("itemUuid") UUID itemUuid) {
         return itemCatalogApi.findById(itemUuid)
                 .map(item -> new ResponseEntity<>(item, HttpStatus.OK))
@@ -60,6 +83,10 @@ class ItemsController {
 
     @Cacheable("items") // Cache the result of getAllItems
     @GetMapping
+    @Operation(
+            summary = "Return items based on search criteria",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<Page<ItemDto>> getAllItems(@ParameterObject Pageable pageable,
                                                      @RequestParam(required = false) String name,
                                                      @RequestParam(required = false) String description,
@@ -72,6 +99,10 @@ class ItemsController {
 
     @CacheEvict(value = "items", allEntries = true) // Clear cache on delete or update
     @DeleteMapping("/{itemUuid}")
+    @Operation(
+            summary = "Removes item from database if exists",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<Void> deleteItem(@PathVariable("itemUuid") UUID itemUuid) {
         itemCatalogApi.deleteItem(itemUuid);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -79,6 +110,10 @@ class ItemsController {
 
     @CacheEvict(value = "items", allEntries = true) // Clear cache on delete or update
     @PutMapping("/{itemUuid}")
+    @Operation(
+            summary = "Updates item in database, by replacing item values with provided ones.",
+            security = @SecurityRequirement(name = "X-Api-Key")
+    )
     public ResponseEntity<ItemDto> updateItem(@PathVariable("itemUuid") UUID itemUuid, @RequestBody @Valid SaveItemCommand updatedItem) {
         return new ResponseEntity<>(itemCatalogApi.updateItem(itemUuid, updatedItem), HttpStatus.OK);
     }
