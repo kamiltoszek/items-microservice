@@ -2,6 +2,7 @@ package dev.toszek.tiara.items.catalog.controller;
 
 import dev.toszek.tiara.items.catalog.ItemCatalogApi;
 import dev.toszek.tiara.items.catalog.command.CreateItemsCommand;
+import dev.toszek.tiara.items.catalog.command.ItemFetchFilter;
 import dev.toszek.tiara.items.catalog.command.SaveItemCommand;
 import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import jakarta.validation.Valid;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -57,8 +60,13 @@ class ItemsController {
 
     @Cacheable("items") // Cache the result of getAllItems
     @GetMapping
-    public ResponseEntity<Page<ItemDto>> getAllItems(@ParameterObject Pageable pageable) {
-        final Page<ItemDto> itemsPage = itemCatalogApi.findAllPageable(pageable);
+    public ResponseEntity<Page<ItemDto>> getAllItems(@ParameterObject Pageable pageable,
+                                                     @RequestParam(required = false) String name,
+                                                     @RequestParam(required = false) String description,
+                                                     @RequestParam(required = false) BigDecimal price,
+                                                     @RequestParam(required = false) BigDecimal lessThenPrice,
+                                                     @RequestParam(required = false) BigDecimal greaterThenPrice) {
+        final Page<ItemDto> itemsPage = itemCatalogApi.findAllPageable(pageable, new ItemFetchFilter(name, description, price, lessThenPrice, greaterThenPrice));
         return new ResponseEntity<>(itemsPage, HttpStatus.OK);
     }
 
@@ -71,7 +79,7 @@ class ItemsController {
 
     @CacheEvict(value = "items", allEntries = true) // Clear cache on delete or update
     @PutMapping("/{itemUuid}")
-    public ResponseEntity<ItemDto> updateItem(@PathVariable("itemUuid") UUID itemUuid, @RequestBody SaveItemCommand updatedItem) {
+    public ResponseEntity<ItemDto> updateItem(@PathVariable("itemUuid") UUID itemUuid, @RequestBody @Valid SaveItemCommand updatedItem) {
         return new ResponseEntity<>(itemCatalogApi.updateItem(itemUuid, updatedItem), HttpStatus.OK);
     }
 }

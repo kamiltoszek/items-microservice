@@ -16,10 +16,14 @@ public interface ItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
     Item fromCreateCommand(SaveItemCommand saveItemCommand, UUID uuid);
 
-    @Mapping(target = "version", ignore = true)
-    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
     void updateItem(SaveItemCommand updatedItem, @MappingTarget Item item);
 }

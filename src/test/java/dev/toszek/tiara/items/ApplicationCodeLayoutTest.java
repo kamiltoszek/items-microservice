@@ -9,7 +9,7 @@ class ApplicationCodeLayoutTest {
     @Test
     void writeDocumentationSnippets() {
 
-        var modules = ApplicationModules.of(ItemsApplication.class).verify();
+        var modules = ApplicationModules.of(Application.class).verify();
 
         new Documenter(modules)
                 .writeDocumentation()
