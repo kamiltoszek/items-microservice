@@ -1,7 +1,7 @@
 package dev.toszek.tiara.items.catalog.internal.mapper;
 
-import dev.toszek.tiara.items.catalog.CreateItemCommand;
-import dev.toszek.tiara.items.catalog.ItemDto;
+import dev.toszek.tiara.items.catalog.command.CreateItemCommand;
+import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import dev.toszek.tiara.items.catalog.internal.entity.Item;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

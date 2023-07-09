@@ -1,4 +1,4 @@
-package dev.toszek.tiara.items.catalog;
+package dev.toszek.tiara.items.catalog.dto;
 
 import java.util.UUID;
 

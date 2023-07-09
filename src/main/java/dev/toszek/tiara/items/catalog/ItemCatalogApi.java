@@ -1,5 +1,7 @@
 package dev.toszek.tiara.items.catalog;
 
+import dev.toszek.tiara.items.catalog.command.CreateItemCommand;
+import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
