@@ -16,9 +16,16 @@
             <column name="description" type="varchar(5000)">
                 <constraints nullable="false"/>
             </column>
+            <column name="price" type="decimal(8,2)">
+                <constraints nullable="false"/>
+            </column>
             <column name="version" type="int">
                 <constraints nullable="false"/>
             </column>
+            <column name="creation_date" type="timestamptz">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_modified_date" type="timestamptz"/>
         </createTable>
         <createIndex tableName="item" indexName="ix_item_uuid">
             <column name="uuid"/>
