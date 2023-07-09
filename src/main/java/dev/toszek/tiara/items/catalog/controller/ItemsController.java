@@ -14,17 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -77,17 +73,5 @@ class ItemsController {
     @PutMapping("/{itemUuid}")
     public ResponseEntity<ItemDto> updateItem(@PathVariable("itemUuid") UUID itemUuid, @RequestBody SaveItemCommand updatedItem) {
         return new ResponseEntity<>(itemCatalogApi.updateItem(itemUuid, updatedItem), HttpStatus.OK);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<List<String>> handleValidationException(MethodArgumentNotValidException ex) {
-        BindingResult bindingResult = ex.getBindingResult();
-        List<String> errors = new ArrayList<>();
-        bindingResult.getFieldErrors().forEach(error -> {
-            String errorMessage = error.getField() + ": " + error.getDefaultMessage();
-            errors.add(errorMessage);
-        });
-        return ResponseEntity.badRequest().body(errors);
     }
 }
