@@ -1,5 +1,9 @@
-package dev.toszek.tiara.items.catalog;
+package dev.toszek.tiara.items.catalog.controller;
 
+import dev.toszek.tiara.items.catalog.ItemCatalogApi;
+import dev.toszek.tiara.items.catalog.command.CreateItemCommand;
+import dev.toszek.tiara.items.catalog.command.CreateItemsCommand;
+import dev.toszek.tiara.items.catalog.dto.ItemDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;

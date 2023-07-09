@@ -1,4 +1,4 @@
-package dev.toszek.tiara.items.catalog;
+package dev.toszek.tiara.items.catalog.command;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
