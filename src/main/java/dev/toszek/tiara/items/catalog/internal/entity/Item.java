@@ -2,8 +2,9 @@ package dev.toszek.tiara.items.catalog.internal.entity;
 
 import dev.toszek.tiara.shared.entity.BaseEntity;
 import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -14,7 +15,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class Item extends BaseEntity {
     private UUID uuid;
     private String name;

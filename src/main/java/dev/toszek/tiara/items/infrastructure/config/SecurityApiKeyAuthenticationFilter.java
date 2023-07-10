@@ -13,8 +13,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import java.io.IOException;
 
 class SecurityApiKeyAuthenticationFilter extends BasicAuthenticationFilter {
-    private static final String API_KEY_HEADER = "X-Api-Key";
-    private final String apiKey;
+     private final String apiKey;
 
     public SecurityApiKeyAuthenticationFilter(final AuthenticationManager authenticationManager, final String apiKey) {
         super(authenticationManager);
@@ -25,15 +24,16 @@ class SecurityApiKeyAuthenticationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest req,
                                     HttpServletResponse res,
                                     FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(API_KEY_HEADER);
-        if (header == null) {
+        String header = req.getHeader(SecurityApiKeyConstants.API_KEY_HEADER);
+        if (header == null && !req.getRequestURI().startsWith("/api/")) {
             chain.doFilter(req, res);
             return;
         }
 
         try {
-            if (!header.equals(apiKey)) {
-                throw new BadCredentialsException("Invalid %s".formatted(API_KEY_HEADER));
+            if (header == null || !header.equals(apiKey)) {
+                // api path but not header or wrong api key
+                throw new BadCredentialsException("Invalid %s".formatted(SecurityApiKeyConstants.API_KEY_HEADER));
             }
             SecurityContextHolder.getContext().setAuthentication(new SecurityApiKeyAuthentication(apiKey, AuthorityUtils.NO_AUTHORITIES));
             chain.doFilter(req, res);
