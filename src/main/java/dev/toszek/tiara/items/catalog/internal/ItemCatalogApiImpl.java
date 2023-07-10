@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -39,26 +40,30 @@ class ItemCatalogApiImpl implements ItemCatalogApi {
 
     @Override
     public Page<ItemDto> findAllPageable(final Pageable pageable, final ItemFetchFilter filter) {
-        return itemRepository.findAll((root, query, criteriaBuilder) -> {
-                    List<Predicate> filters = new ArrayList<>();
-                    if (filter.name() != null) {
-                        filters.add(criteriaBuilder.like(root.get(Item_.name), filter.name()));
-                    }
-                    if (filter.description() != null) {
-                        filters.add(criteriaBuilder.like(root.get(Item_.description), filter.description()));
-                    }
-                    if (filter.price() != null) {
-                        filters.add(criteriaBuilder.equal(root.get(Item_.price), filter.price()));
-                    }
-                    if (filter.lessThenPrice() != null) {
-                        filters.add(criteriaBuilder.lessThan(root.get(Item_.price), filter.lessThenPrice()));
-                    }
-                    if (filter.greaterThanPrice() != null) {
-                        filters.add(criteriaBuilder.greaterThan(root.get(Item_.price), filter.greaterThanPrice()));
-                    }
-                    return criteriaBuilder.and(filters.toArray(new Predicate[0]));
-                }, pageable)
+        return itemRepository.findAll(getItemSpecification(filter), pageable)
                 .map(itemMapper::toDto);
+    }
+
+    private static Specification<Item> getItemSpecification(final ItemFetchFilter filter) {
+        return (root, query, criteriaBuilder) -> {
+            List<Predicate> filters = new ArrayList<>();
+            if (filter.name() != null) {
+                filters.add(criteriaBuilder.like(root.get(Item_.name), filter.name()));
+            }
+            if (filter.description() != null) {
+                filters.add(criteriaBuilder.like(root.get(Item_.description), filter.description()));
+            }
+            if (filter.price() != null) {
+                filters.add(criteriaBuilder.equal(root.get(Item_.price), filter.price()));
+            }
+            if (filter.lessThenPrice() != null) {
+                filters.add(criteriaBuilder.lessThan(root.get(Item_.price), filter.lessThenPrice()));
+            }
+            if (filter.greaterThanPrice() != null) {
+                filters.add(criteriaBuilder.greaterThan(root.get(Item_.price), filter.greaterThanPrice()));
+            }
+            return criteriaBuilder.and(filters.toArray(new Predicate[0]));
+        };
     }
 
     @Override
