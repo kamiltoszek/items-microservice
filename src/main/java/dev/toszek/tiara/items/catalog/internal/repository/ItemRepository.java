@@ -10,5 +10,7 @@ import java.util.UUID;
 public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificationExecutor<Item> {
     Optional<Item> findItemByUuid(UUID uuid);
 
+    <T> Optional<T> findItemByUuid(UUID uuid, Class<T> type);
+
     void deleteItemByUuid(UUID uuid);
 }
