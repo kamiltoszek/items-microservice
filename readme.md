@@ -37,6 +37,8 @@ aspects like:
   functionality. Implementation of this api is also using jakarta.validation annotations, thanks to that,
   not only endpoints are guarded for argument errors, but also calls of module's interface from other modules (in code)
   are validated.
+- Use of dynamic projection: ItemRepository.findItemByUuid(UUID uuid, Class<T> type) is used to return ItemDto
+  directly instead of mapping via mapstruct mapper after loading Item from the db.
 
 # My note on tests in this project
 

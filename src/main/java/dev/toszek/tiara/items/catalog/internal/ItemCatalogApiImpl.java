@@ -34,8 +34,9 @@ class ItemCatalogApiImpl implements ItemCatalogApi {
 
     @Override
     public Optional<ItemDto> findById(final UUID itemUuid) {
-        return itemRepository.findItemByUuid(itemUuid)
-                .map(itemMapper::toDto);
+        // Instead of mapping entity to dto, return dto from repository by using dynamic projection
+        // return itemRepository.findItemByUuid(itemUuid).map(itemMapper::toDto);
+        return itemRepository.findItemByUuid(itemUuid, ItemDto.class);
     }
 
     @Override
@@ -68,7 +69,6 @@ class ItemCatalogApiImpl implements ItemCatalogApi {
 
     @Override
     public ItemDto createItem(@Valid final SaveItemCommand saveItemCommand) {
-        // saveItemCommand.selfValidate();
         Item newItem = itemMapper.fromCreateCommand(saveItemCommand, UUID.randomUUID());
         newItem = itemRepository.save(newItem);
         return itemMapper.toDto(newItem);

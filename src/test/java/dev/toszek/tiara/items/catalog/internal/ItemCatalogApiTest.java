@@ -54,7 +54,7 @@ class ItemCatalogApiTest {
         // Mocking behavior
         UUID itemUuid = UUID.randomUUID();
         Item item = new Item(itemUuid, "Test Item", "Description", BigDecimal.TEN);
-        when(itemRepository.findItemByUuid(itemUuid)).thenReturn(Optional.of(item));
+        when(itemRepository.findItemByUuid(itemUuid, ItemDto.class)).thenReturn(Optional.of(itemMapper.toDto(item)));
 
         // Test the method
         Optional<ItemDto> result = itemCatalogApi.findById(itemUuid);
@@ -64,7 +64,7 @@ class ItemCatalogApiTest {
                 .hasValue(new ItemDto(itemUuid, item.getName(), item.getDescription(), item.getPrice(), null, null));
 
         // Verify the interaction with the mock
-        verify(itemRepository, times(1)).findItemByUuid(itemUuid);
+        verify(itemRepository, times(1)).findItemByUuid(itemUuid, ItemDto.class);
         verifyNoMoreInteractions(itemRepository);
     }
 
@@ -72,7 +72,7 @@ class ItemCatalogApiTest {
     void testFindByIdWithNotExistingItem() {
         // Mocking behavior
         UUID itemUuid = UUID.randomUUID();
-        when(itemRepository.findItemByUuid(itemUuid)).thenReturn(Optional.empty());
+        when(itemRepository.findItemByUuid(itemUuid, ItemDto.class)).thenReturn(Optional.empty());
 
         // Test the method
         Optional<ItemDto> result = itemCatalogApi.findById(itemUuid);
@@ -82,7 +82,7 @@ class ItemCatalogApiTest {
                 .isEmpty();
 
         // Verify the interaction with the mock
-        verify(itemRepository, times(1)).findItemByUuid(itemUuid);
+        verify(itemRepository, times(1)).findItemByUuid(itemUuid, ItemDto.class);
         verifyNoMoreInteractions(itemRepository);
     }
 
