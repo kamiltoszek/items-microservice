@@ -48,6 +48,7 @@ class ItemsController {
     private final ItemCatalogApi itemCatalogApi;
 
     @PostMapping
+    @CacheEvict(value = "items", allEntries = true) // Clear cache on delete or update
     @Operation(
             summary = "Creates item in item database",
             security = @SecurityRequirement(name = "X-Api-Key")
@@ -58,6 +59,7 @@ class ItemsController {
     }
 
     @PostMapping("/bulk")
+    @CacheEvict(value = "items", allEntries = true) // Clear cache on delete or update
     @Transactional // wrapping bulk item creation in one transaction
     @Operation(
             summary = "Creates items in item database, max items allowed at once = 50",
