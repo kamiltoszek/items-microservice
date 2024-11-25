@@ -55,10 +55,10 @@ endpoints with different users or tinkering with is and check if I got response.
 
 # What libraries are used here
 
-- Spring Boot 3.1 and Spring 6 (jakarta)
+- Spring Boot 3.4 and Spring 6 (jakarta)
 - Spring Security 6 with API Key security on /api/** endpoints
 - H2 for database
-- Java 17 (current LTS)
+- Java 21 (current LTS)
 - Liquibase
 - Coffeine for cache
 - Lombok
